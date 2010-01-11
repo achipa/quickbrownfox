@@ -1,0 +1,42 @@
+Source: quickbrownfox
+Section: user/desktop
+Priority: extra
+Maintainer: Attila Csipa <maemo@csipa.in.rs>
+Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.5.0)
+Standards-Version: 3.8.0
+Homepage: downloads.maemo.org
+
+Package: quickbrownfox
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: View fonts
+  Allows to quickly take a look at fonts, either installed on
+  the system or simply stored in a directory. Toggle size and
+  style in a Maemo friendly way. For designers and font geeks.
+XB-Maemo-Icon-26:
+  iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABGdBTUEAAK/I
+  NwWK6QAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAA
+  AAl2cEFnAAAAGgAAABoAB7JmLwAAA4JJREFUSMetls1LK2cUxn/vGDqR9Dpq
+  RFoRhQb0guhO4sKdRNCVIAguxLWkoIJ/gnRR927cS6gLwVWgWbjRGE1QiMRo
+  0IUm4BfExGY6GTMzXdxOSDQx2tsDw3y8Z87zPufjPUcAOJ1ONE0T/f397ubm
+  5i98UoQQb75pmvb3w8PDvcPhMG9vb3H4fD68Xi+ZTGZ0ZGTkt7a2tp8BC8Cy
+  rIYg9XTS6XQuFAr9HgwG/2hvb8eh6zqrq6tibW1tbmZmZlRRFCzLKl+2sfe+
+  1Xp/enri4uLiV+BPh8ORdRiGASA5nc4fZVl+Y7QRSD0dWZaRZfkL8INpmthA
+  mKbZ8OePgFRuxjTN8vOngD4CUqlr264Ces/fnwF5bcMWyaZXSbNSyTAMdF3/
+  TyCVNqX3XCeEIJlMsrGxQS6Xa8js9XpNoFo/vby8EI1GiUQixONxhBA19SRJ
+  QpKkN2sNGdlyf39PJBKhUCiwv79f5UJbstks8Xics7MzCoVCVRFXZV29GAkh
+  OD4+plgsoigKsViMdDpNT09PWTeZTBIIBMjlcuTzeTweDwsLC7hcrreMaiWB
+  ZVllFmNjY4yOjpLJZDg4OKiqkcPDQy4vL5mbm2N4eJhQKEQqlSq7uGEdCSG4
+  uroilUoBoKoqqqoSCoWYnJzE6XQihMDr9VIqlUgmk0SjUVRVrXJfwxgZhsHe
+  3h4tLS243W66urro7e3l6OiIRCKBJEkYhsHNzQ3hcJhYLGZ3gKoYVd6rss7O
+  oLu7O6LRKNPT0ywtLbG8vMzs7CyPj48Eg0EsyyKfz7Ozs0OxWGRlZYW+vj40
+  TaOpqan2EfQ6GRKJBIFAgOvra8LhMB6PB5fLxcnJCbqus7m5SUdHB1NTU+VN
+  ra+vE4lEeH5+Zmtri+7ubtxud/0YAWiaRmtrK+Pj45RKJVRVRZZlFEXB7/dj
+  miamaSLLMvPz82xvb2OaJn6/n9PTU4rFIq9tvgEyDIOhoSEGBweris6yLBYX
+  F6uy0jAMBgYG+Pr167cYSBI+n69sXNf12q6rLLLX/q0ErFX59pn4+sSoyaje
+  0fE9jbAKqFQqNWzN/wuQzaiy73yG0UfmC6AcIzObzRY0TUNRlPL49JGd12uU
+  hUKBXC738i1U/84MExMT1u7ubkCW5eHOzs6ueiNUo/HLXhdCcH5+rsXj8W3g
+  ybIsKic/CfgF+AkQfL+owDnwF8A/idb16QmhkBIAAAAldEVYdGNyZWF0ZS1k
+  YXRlADIwMTAtMDEtMTFUMDM6MjM6NDkrMDE6MDBAkdzAAAAAJXRFWHRtb2Rp
+  ZnktZGF0ZQAyMDA4LTExLTEwVDE4OjQzOjM2KzAxOjAwmOEhkQAAABl0RVh0
+  U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAASUVORK5CYII=
