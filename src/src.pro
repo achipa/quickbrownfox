@@ -6,7 +6,7 @@
 
 TARGET = quickbrownfox
 TEMPLATE = app
-CONFIG += debug
+CONFIG += release
 
 SOURCES += main.cpp\
         mainwindow.cpp
