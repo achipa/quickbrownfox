@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDBusConnection>
+#include <QDBusMessage>
 
 MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     QMainWindow(parent),
@@ -40,6 +42,23 @@ void MainWindow::browseSystem()
     ui->fontComboBox->setCurrentIndex(0);
 }
 
+void MainWindow::notify(QString text)
+{
+    QDBusMessage msg = QDBusMessage::createMethodCall("org.freedesktop.Notifications",
+                                          "/org/freedesktop/Notifications",
+                                           "org.freedesktop.Notifications",
+                                           "SystemNoteDialog");
+
+    QList<QVariant> args;
+    args.append(text);
+    args.append(static_cast<quint32>(0));
+    args.append("ok");
+
+    msg.setArguments(args);
+
+    QDBusConnection::systemBus().call(msg);
+}
+
 void MainWindow::browseDir()
 {
     if (!ui->actionBrowse_directory->isChecked())
@@ -56,6 +75,7 @@ void MainWindow::browseDir()
     if (dialog.exec())
         fileNames = dialog.selectedFiles();
     if (fileNames.length() == 0) {
+        notify(tr("No font files found"));
         browseSystem();
         return;
     } else {
@@ -73,7 +93,12 @@ void MainWindow::browseDir()
         }
         foreach (QString fname, qfd.families())
             ui->fileComboBox->addItem(fname, fname);
-        ui->fileComboBox->setCurrentIndex(0);
+        if (ui->fileComboBox->count() == 0) {
+            notify(tr("No font files found"));
+            browseSystem();
+            return;
+        } else
+            ui->fileComboBox->setCurrentIndex(0);
     }
 }
 

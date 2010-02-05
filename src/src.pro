@@ -8,6 +8,8 @@ TARGET = quickbrownfox
 TEMPLATE = app
 CONFIG += release
 
+CONFIG += qdbus
+
 SOURCES += main.cpp\
         mainwindow.cpp
 

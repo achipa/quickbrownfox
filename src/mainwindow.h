@@ -21,6 +21,7 @@ private:
     Ui::MainWindow *ui;
     QApplication* qapp;
     QFontDatabase qfd;
+    void notify(QString msg);
 private slots:
     void boldify(bool bold);
     void italicize(bool italic);
