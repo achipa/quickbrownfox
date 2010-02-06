@@ -25,6 +25,8 @@ private:
 private slots:
     void boldify(bool bold);
     void italicize(bool italic);
+    void setText();
+    void setDefaultText();
     void setTextFont(QFont font);
     void setTextSize(QString sizestr);
     void setFontFromFile(QString);

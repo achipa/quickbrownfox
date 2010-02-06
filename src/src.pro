@@ -6,7 +6,7 @@
 
 TARGET = quickbrownfox
 TEMPLATE = app
-CONFIG += release
+#CONFIG += release
 
 CONFIG += qdbus
 

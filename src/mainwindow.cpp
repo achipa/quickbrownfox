@@ -11,7 +11,9 @@ MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     ui(new Ui::MainWindow),
     qapp(&a)
 {
+    qDebug() << "D";
     ui->setupUi(this);
+    qDebug() << "D";
     connect(ui->boldButton, SIGNAL(toggled(bool)), this, SLOT(boldify(bool)));
     connect(ui->italicButton, SIGNAL(toggled(bool)), this, SLOT(italicize(bool)));
     connect(ui->fontComboBox, SIGNAL(currentFontChanged(QFont)), this, SLOT(setTextFont(QFont)));
@@ -21,8 +23,33 @@ MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     connect(ui->actionAbout_Quick_Brown_Fox, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionBrowse_system_fonts, SIGNAL(triggered(bool)), this, SLOT(browseSystem()));
     connect(ui->actionBrowse_directory, SIGNAL(triggered(bool)), this, SLOT(browseDir()));
+    connect(ui->actionSet_Default_Text, SIGNAL(triggered(bool)), this, SLOT(setDefaultText()));
+    connect(ui->actionLoad_Text, SIGNAL(triggered(bool)), this, SLOT(setText()));
+    qDebug() << "D";
     ui->fileComboBox->setVisible(false);
     ui->fontComboBox->setCurrentIndex(0);
+    ui->horizontalSlider->setValue(0);
+    ui->horizontalSlider->setMinimum(0);
+    ui->horizontalSlider->setMaximum(ui->fontComboBox->count());
+    connect(ui->fontComboBox, SIGNAL(currentIndexChanged(int)), ui->horizontalSlider, SLOT(setValue(int)));
+    connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), ui->fontComboBox, SLOT(setCurrentIndex(int)));
+    qDebug() << "D";
+}
+
+void MainWindow::setDefaultText()
+{
+    ui->textEdit->setText(tr("The quick brown fox jumps over the lazy dog"));
+}
+
+void MainWindow::setText()
+{
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::ExistingFile);
+    QStringList fileNames;
+    if (dialog.exec()) {
+        fileNames = dialog.selectedFiles();
+
+    }
 }
 
 void MainWindow::setFontFromFile(QString file)

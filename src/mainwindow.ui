@@ -249,6 +249,13 @@ p, li { white-space: pre-wrap; }
       </property>
      </widget>
     </item>
+    <item>
+     <widget class="QSlider" name="horizontalSlider">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -266,6 +273,9 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="actionBrowse_system_fonts"/>
     <addaction name="actionBrowse_directory"/>
+    <addaction name="separator"/>
+    <addaction name="actionSet_Default_Text"/>
+    <addaction name="actionLoad_Text"/>
     <addaction name="separator"/>
     <addaction name="actionAbout_Qt"/>
     <addaction name="actionAbout_Quick_Brown_Fox"/>
@@ -299,6 +309,16 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Browse directory</string>
+   </property>
+  </action>
+  <action name="actionSet_Default_Text">
+   <property name="text">
+    <string>Set Default Text</string>
+   </property>
+  </action>
+  <action name="actionLoad_Text">
+   <property name="text">
+    <string>Load Text</string>
    </property>
   </action>
  </widget>
