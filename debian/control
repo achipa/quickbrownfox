@@ -1,5 +1,5 @@
 Source: quickbrownfox
-Section: user/desktop
+Section: user/graphics
 Priority: extra
 Maintainer: Attila Csipa <maemo@csipa.in.rs>
 Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.5.0)
