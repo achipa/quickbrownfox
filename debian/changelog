@@ -1,3 +1,11 @@
+quickbrownfox (1.0-maemo0) unstable; urgency=low
+
+  * PR1.1 compatibility
+  * slider for quick font change
+  * external text file loading
+
+ -- Attila Csipa <maemo@csipa.in.rs>  Mon, 8 Feb 2010 19:21:54 +0100
+
 quickbrownfox (0.1-1) unstable; urgency=low
 
   * Initial release

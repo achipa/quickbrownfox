@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QFontDatabase>
+#include <QSettings>
 
 namespace Ui {
     class MainWindow;
@@ -22,9 +23,11 @@ private:
     QApplication* qapp;
     QFontDatabase qfd;
     void notify(QString msg);
+    QSettings settings;
 private slots:
     void boldify(bool bold);
     void italicize(bool italic);
+    void setSlider(int val);
     void setText();
     void setDefaultText();
     void setTextFont(QFont font);

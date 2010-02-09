@@ -9,31 +9,39 @@
 MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    qapp(&a)
+    qapp(&a),
+    settings("QuickBrownFox","default")
 {
-    qDebug() << "D";
     ui->setupUi(this);
-    qDebug() << "D";
+    foreach (QAction* action, ui->menuFremantle->actions()){
+        ui->menuBar->addAction(action);
+        ui->menuFremantle->removeAction(action);
+    }
     connect(ui->boldButton, SIGNAL(toggled(bool)), this, SLOT(boldify(bool)));
     connect(ui->italicButton, SIGNAL(toggled(bool)), this, SLOT(italicize(bool)));
     connect(ui->fontComboBox, SIGNAL(currentFontChanged(QFont)), this, SLOT(setTextFont(QFont)));
     connect(ui->sizeComboBox, SIGNAL(activated(QString)), this, SLOT(setTextSize(QString)));
-    connect(ui->fileComboBox, SIGNAL(activated(QString)), this, SLOT(setFontFromFile(QString)));
+    connect(ui->fileComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setFontFromFile(QString)));
     connect(ui->actionAbout_Qt, SIGNAL(triggered()), qapp, SLOT(aboutQt()));
     connect(ui->actionAbout_Quick_Brown_Fox, SIGNAL(triggered()), this, SLOT(about()));
     connect(ui->actionBrowse_system_fonts, SIGNAL(triggered(bool)), this, SLOT(browseSystem()));
     connect(ui->actionBrowse_directory, SIGNAL(triggered(bool)), this, SLOT(browseDir()));
     connect(ui->actionSet_Default_Text, SIGNAL(triggered(bool)), this, SLOT(setDefaultText()));
     connect(ui->actionLoad_Text, SIGNAL(triggered(bool)), this, SLOT(setText()));
-    qDebug() << "D";
-    ui->fileComboBox->setVisible(false);
-    ui->fontComboBox->setCurrentIndex(0);
     ui->horizontalSlider->setValue(0);
     ui->horizontalSlider->setMinimum(0);
-    ui->horizontalSlider->setMaximum(ui->fontComboBox->count());
     connect(ui->fontComboBox, SIGNAL(currentIndexChanged(int)), ui->horizontalSlider, SLOT(setValue(int)));
-    connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), ui->fontComboBox, SLOT(setCurrentIndex(int)));
-    qDebug() << "D";
+    connect(ui->fileComboBox, SIGNAL(currentIndexChanged(int)), ui->horizontalSlider, SLOT(setValue(int)));
+    connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(setSlider(int)));
+    browseSystem();
+}
+
+void MainWindow::setSlider(int val)
+{
+    if (ui->fontComboBox->isVisible())
+        ui->fontComboBox->setCurrentIndex(val);
+    else
+        ui->fileComboBox->setCurrentIndex(val);
 }
 
 void MainWindow::setDefaultText()
@@ -48,7 +56,14 @@ void MainWindow::setText()
     QStringList fileNames;
     if (dialog.exec()) {
         fileNames = dialog.selectedFiles();
-
+        if (fileNames.count() > 0){
+            qDebug() << fileNames[0];
+            QFile f(fileNames[0]);
+            if (f.open(QIODevice::ReadOnly|QIODevice::Text)){
+                QString s(f.readAll());
+                ui->textEdit->setText(s);
+            }
+        }
     }
 }
 
@@ -58,15 +73,19 @@ void MainWindow::setFontFromFile(QString file)
 }
 void MainWindow::browseSystem()
 {
-    if (!ui->actionBrowse_system_fonts->isChecked())
+/*    if (!ui->actionBrowse_system_fonts->isChecked())
     {
         ui->actionBrowse_system_fonts->setChecked(true);
         return;
-    }
+    }*/
     ui->fileComboBox->setVisible(false);
     ui->fontComboBox->setVisible(true);
     ui->actionBrowse_directory->setChecked(false);
+    ui->actionBrowse_system_fonts->setChecked(true);
+    qfd.removeAllApplicationFonts();
+    ui->horizontalSlider->setMaximum(ui->fontComboBox->count()-1);
     ui->fontComboBox->setCurrentIndex(0);
+    setTextFont(ui->fontComboBox->currentFont());
 }
 
 void MainWindow::notify(QString text)
@@ -88,14 +107,15 @@ void MainWindow::notify(QString text)
 
 void MainWindow::browseDir()
 {
-    if (!ui->actionBrowse_directory->isChecked())
+/*    if (!ui->actionBrowse_directory->isChecked())
     {
         ui->actionBrowse_directory->setChecked(true);
         return;
-    }
+    }*/
     ui->fileComboBox->setVisible(true);
     ui->fontComboBox->setVisible(false);
     ui->actionBrowse_system_fonts->setChecked(false);
+    ui->actionBrowse_directory->setChecked(true);
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::Directory);
     QStringList fileNames;
@@ -113,19 +133,26 @@ void MainWindow::browseDir()
         filterlist << "*.ttf" << "*.otf" << "*.pfb" << "*.afb" << "*.pfm" << "*.afm";
         dir.setNameFilters(filterlist);
         ui->fileComboBox->clear();
+        QStringList dupelist;
         foreach (QString fname, dir.entryList())
         {
             fullpath = dir.canonicalPath() +"/" + fname;
-            qDebug() << fullpath << qfd.addApplicationFont(fullpath);
+            int fid = qfd.addApplicationFont(fullpath);
+            foreach (QString famname, qfd.applicationFontFamilies(fid))
+                if (!dupelist.contains(famname)) {
+                    ui->fileComboBox->addItem(famname, fname);
+                    dupelist << famname;
+                }
         }
-        foreach (QString fname, qfd.families())
-            ui->fileComboBox->addItem(fname, fname);
         if (ui->fileComboBox->count() == 0) {
             notify(tr("No font files found"));
             browseSystem();
             return;
-        } else
+        } else {
+            ui->horizontalSlider->setMaximum(ui->fileComboBox->count()-1);
             ui->fileComboBox->setCurrentIndex(0);
+            setFontFromFile(ui->fileComboBox->currentText());
+        }
     }
 }
 
@@ -145,7 +172,6 @@ void MainWindow::setTextSize(QString sizestr)
 
 void MainWindow::setTextFont(QFont font)
 {
-    qDebug() << "set" << font;
     QTextCursor tc = ui->textEdit->textCursor();
     ui->textEdit->selectAll();
     ui->textEdit->setCurrentFont(font);
