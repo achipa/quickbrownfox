@@ -1,5 +1,6 @@
-quickbrownfox (1.0-maemo0) unstable; urgency=low
+quickbrownfox (1.0-maemo1) unstable; urgency=low
 
+  * Bugtracker field (duh)
   * PR1.1 compatibility
   * slider for quick font change
   * external text file loading

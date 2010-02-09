@@ -4,6 +4,7 @@ Priority: extra
 Maintainer: Attila Csipa <maemo@csipa.in.rs>
 Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.5.0)
 Standards-Version: 3.8.0
+XSBC-Bugtracker: https://garage.maemo.org/tracker/?func=browse&group_id=1234&atid=4632
 Homepage: downloads.maemo.org
 
 Package: quickbrownfox
