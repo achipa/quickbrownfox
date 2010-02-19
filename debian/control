@@ -14,6 +14,7 @@ Description: View fonts
   Allows to quickly take a look at fonts, either installed on
   the system or simply stored in a directory. Toggle size and
   style in a Maemo friendly way. For designers and font geeks.
+XB-Maemo-Display-Name: Quick Brown Fox
 XB-Maemo-Icon-26:
   iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAAK/I
   NwWK6QAAAAZiS0dEAAAAAAAA+UO7fwAAAAlwSFlzAAAASAAAAEgARslrPgAA

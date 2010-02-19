@@ -111,6 +111,7 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Release</value>
    <value key="QtVersionId" type="int">0</value>
+   <value key="ToolChain" type="int">0</value>
    <value key="addQDumper" type=""></value>
    <value key="buildConfiguration" type="int">0</value>
   </valuemap>
@@ -120,8 +121,8 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList">
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-EyhkrYaIbP,guid=78dd6f329aaf4122f50a23fa4b70a22b</value>
-    <value type="QString">DISPLAY=:1009.0</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-7aRlBTOBg4,guid=2dd8ac6940f55f061547b2c44b7e906f</value>
+    <value type="QString">DISPLAY=:1013.0</value>
     <value type="QString">GS_LIB=/home/maemo/.fonts</value>
     <value type="QString">GTK2_RC_FILES=/etc/gtk-2.0/gtkrc:/home/maemo/.gtkrc-2.0:/home/maemo/.gtkrc-2.0-kde4:/scratchbox/maemo/.kde/share/config/gtkrc-2.0</value>
     <value type="QString">GTK_RC_FILES=/etc/gtk/gtkrc:/home/maemo/.gtkrc::/scratchbox/maemo/.kde/share/config/gtkrc</value>
@@ -131,7 +132,8 @@
     <value type="QString">KDE_SESSION_UID=</value>
     <value type="QString">KDE_SESSION_VERSION=4</value>
     <value type="QString">LANG=en_US.UTF-8</value>
-    <value type="QString">LD_LIBRARY_PATH=/opt/qtsdk-2010.01/lib/qtcreator:</value>
+    <value type="QString">LANGUAGE=</value>
+    <value type="QString">LD_LIBRARY_PATH=/opt/qtsdk-2010.02/lib/qtcreator:</value>
     <value type="QString">LOGNAME=maemo</value>
     <value type="QString">MAIL=/var/mail/maemo</value>
     <value type="QString">NXDIR=/usr/NX</value>
@@ -140,20 +142,20 @@
     <value type="QString">NX_ROOT=/home/maemo/.nx</value>
     <value type="QString">NX_SYSTEM=/usr/NX</value>
     <value type="QString">NX_TEMP=/tmp</value>
-    <value type="QString">PATH=/opt/qtsdk-2010.01/qt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
+    <value type="QString">PATH=/opt/qtsdk-2010.02/qt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
     <value type="QString">PWD=/scratchbox/maemo</value>
-    <value type="QString">QTDIR=/opt/qtsdk-2010.01/qt</value>
+    <value type="QString">QTDIR=/opt/qtsdk-2010.02/qt</value>
     <value type="QString">QT_PLUGIN_PATH=/home/maemo/.kde/lib/kde4/plugins/:/usr/lib/kde4/plugins/</value>
-    <value type="QString">SESSION_MANAGER=local/ip-10-212-94-147:/tmp/.ICE-unix/9544</value>
+    <value type="QString">SESSION_MANAGER=local/ip-10-212-94-147:/tmp/.ICE-unix/27010</value>
     <value type="QString">SHELL=/bin/bash</value>
     <value type="QString">SHLVL=2</value>
-    <value type="QString">SSH_CLIENT=127.0.0.1 43956 22</value>
-    <value type="QString">SSH_CONNECTION=127.0.0.1 43956 127.0.0.1 22</value>
+    <value type="QString">SSH_CLIENT=127.0.0.1 46573 22</value>
+    <value type="QString">SSH_CONNECTION=127.0.0.1 46573 127.0.0.1 22</value>
     <value type="QString">SSH_ORIGINAL_COMMAND=/usr/NX/bin/nxnode</value>
     <value type="QString">USER=maemo</value>
     <value type="QString">XCURSOR_THEME=oxy-white</value>
     <value type="QString">XDG_DATA_DIRS=/usr/share:/usr/share:/usr/local/share</value>
-    <value type="QString">XDG_SESSION_COOKIE=22f250fe1ae1e6018b34f2764b6c212e-1265672725.677802-199028787</value>
+    <value type="QString">XDG_SESSION_COOKIE=22f250fe1ae1e6018b34f2764b6c212e-1266585695.642302-1449303619</value>
     <value type="QString">_=/usr/bin/dbus-launch</value>
    </valuelist>
    <valuelist key="abstractProcess.arguments" type="QVariantList">
@@ -163,7 +165,7 @@
     <value type="QString">-r</value>
     <value type="QString">CONFIG+=debug</value>
    </valuelist>
-   <value key="abstractProcess.command" type="QString">/opt/qtsdk-2010.01/qt/bin/qmake</value>
+   <value key="abstractProcess.command" type="QString">/opt/qtsdk-2010.02/qt/bin/qmake</value>
    <value key="abstractProcess.enabled" type="bool">false</value>
    <value key="abstractProcess.workingDirectory" type="QString">/scratchbox/users/maemo/home/maemo/quickbrownfox/src</value>
   </valuemap>
@@ -173,8 +175,8 @@
   <valuemap type="QVariantMap">
    <value key="ProjectExplorer.BuildConfiguration.DisplayName" type="QString">Debug</value>
    <valuelist key="abstractProcess.Environment" type="QVariantList">
-    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-EyhkrYaIbP,guid=78dd6f329aaf4122f50a23fa4b70a22b</value>
-    <value type="QString">DISPLAY=:1009.0</value>
+    <value type="QString">DBUS_SESSION_BUS_ADDRESS=unix:abstract=/tmp/dbus-7aRlBTOBg4,guid=2dd8ac6940f55f061547b2c44b7e906f</value>
+    <value type="QString">DISPLAY=:1013.0</value>
     <value type="QString">GS_LIB=/home/maemo/.fonts</value>
     <value type="QString">GTK2_RC_FILES=/etc/gtk-2.0/gtkrc:/home/maemo/.gtkrc-2.0:/home/maemo/.gtkrc-2.0-kde4:/scratchbox/maemo/.kde/share/config/gtkrc-2.0</value>
     <value type="QString">GTK_RC_FILES=/etc/gtk/gtkrc:/home/maemo/.gtkrc::/scratchbox/maemo/.kde/share/config/gtkrc</value>
@@ -184,7 +186,8 @@
     <value type="QString">KDE_SESSION_UID=</value>
     <value type="QString">KDE_SESSION_VERSION=4</value>
     <value type="QString">LANG=en_US.UTF-8</value>
-    <value type="QString">LD_LIBRARY_PATH=/opt/qtsdk-2010.01/lib/qtcreator:</value>
+    <value type="QString">LANGUAGE=</value>
+    <value type="QString">LD_LIBRARY_PATH=/opt/qtsdk-2010.02/lib/qtcreator:</value>
     <value type="QString">LOGNAME=maemo</value>
     <value type="QString">MAIL=/var/mail/maemo</value>
     <value type="QString">NXDIR=/usr/NX</value>
@@ -193,20 +196,20 @@
     <value type="QString">NX_ROOT=/home/maemo/.nx</value>
     <value type="QString">NX_SYSTEM=/usr/NX</value>
     <value type="QString">NX_TEMP=/tmp</value>
-    <value type="QString">PATH=/opt/qtsdk-2010.01/qt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
+    <value type="QString">PATH=/opt/qtsdk-2010.02/qt/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games</value>
     <value type="QString">PWD=/scratchbox/maemo</value>
-    <value type="QString">QTDIR=/opt/qtsdk-2010.01/qt</value>
+    <value type="QString">QTDIR=/opt/qtsdk-2010.02/qt</value>
     <value type="QString">QT_PLUGIN_PATH=/home/maemo/.kde/lib/kde4/plugins/:/usr/lib/kde4/plugins/</value>
-    <value type="QString">SESSION_MANAGER=local/ip-10-212-94-147:/tmp/.ICE-unix/9544</value>
+    <value type="QString">SESSION_MANAGER=local/ip-10-212-94-147:/tmp/.ICE-unix/27010</value>
     <value type="QString">SHELL=/bin/bash</value>
     <value type="QString">SHLVL=2</value>
-    <value type="QString">SSH_CLIENT=127.0.0.1 43956 22</value>
-    <value type="QString">SSH_CONNECTION=127.0.0.1 43956 127.0.0.1 22</value>
+    <value type="QString">SSH_CLIENT=127.0.0.1 46573 22</value>
+    <value type="QString">SSH_CONNECTION=127.0.0.1 46573 127.0.0.1 22</value>
     <value type="QString">SSH_ORIGINAL_COMMAND=/usr/NX/bin/nxnode</value>
     <value type="QString">USER=maemo</value>
     <value type="QString">XCURSOR_THEME=oxy-white</value>
     <value type="QString">XDG_DATA_DIRS=/usr/share:/usr/share:/usr/local/share</value>
-    <value type="QString">XDG_SESSION_COOKIE=22f250fe1ae1e6018b34f2764b6c212e-1265672725.677802-199028787</value>
+    <value type="QString">XDG_SESSION_COOKIE=22f250fe1ae1e6018b34f2764b6c212e-1266585695.642302-1449303619</value>
     <value type="QString">_=/usr/bin/dbus-launch</value>
    </valuelist>
    <value key="abstractProcess.IgnoreReturnValue" type="bool">false</value>

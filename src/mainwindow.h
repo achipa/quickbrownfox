@@ -25,6 +25,8 @@ private:
     void notify(QString msg);
     QSettings settings;
 private slots:
+    void toggleEditMode();
+    void updateScrollFontSizes(int val);
     void boldify(bool bold);
     void italicize(bool italic);
     void setSlider(int val);

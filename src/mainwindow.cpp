@@ -5,6 +5,7 @@
 #include <QFileDialog>
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QLabel>
 
 MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     QMainWindow(parent),
@@ -17,10 +18,19 @@ MainWindow::MainWindow(QApplication& a, QWidget *parent) :
         ui->menuBar->addAction(action);
         ui->menuFremantle->removeAction(action);
     }
+    ui->scrollFonts->setProperty("FingerScrollable", true);
+    ui->textEdit->setProperty("FingerScrollable", true);
+    ui->scrollFonts->setVisible(false);
     connect(ui->boldButton, SIGNAL(toggled(bool)), this, SLOT(boldify(bool)));
     connect(ui->italicButton, SIGNAL(toggled(bool)), this, SLOT(italicize(bool)));
     connect(ui->fontComboBox, SIGNAL(currentFontChanged(QFont)), this, SLOT(setTextFont(QFont)));
-    connect(ui->sizeComboBox, SIGNAL(activated(QString)), this, SLOT(setTextSize(QString)));
+    connect(ui->sizeComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setTextSize(QString)));
+    ui->sizeSlider->setMinimum(0);
+    ui->sizeSlider->setMaximum(ui->sizeComboBox->count());
+    ui->sizeSlider->setValue(ui->sizeComboBox->currentIndex());
+    connect(ui->sizeComboBox, SIGNAL(currentIndexChanged(int)), ui->sizeSlider, SLOT(setValue(int)));
+    connect(ui->sizeSlider, SIGNAL(valueChanged(int)), ui->sizeComboBox, SLOT(setCurrentIndex(int)));
+    connect(ui->sizeSlider, SIGNAL(valueChanged(int)), this, SLOT(updateScrollFontSizes(int)));
     connect(ui->fileComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setFontFromFile(QString)));
     connect(ui->actionAbout_Qt, SIGNAL(triggered()), qapp, SLOT(aboutQt()));
     connect(ui->actionAbout_Quick_Brown_Fox, SIGNAL(triggered()), this, SLOT(about()));
@@ -28,12 +38,58 @@ MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     connect(ui->actionBrowse_directory, SIGNAL(triggered(bool)), this, SLOT(browseDir()));
     connect(ui->actionSet_Default_Text, SIGNAL(triggered(bool)), this, SLOT(setDefaultText()));
     connect(ui->actionLoad_Text, SIGNAL(triggered(bool)), this, SLOT(setText()));
-    ui->horizontalSlider->setValue(0);
-    ui->horizontalSlider->setMinimum(0);
-    connect(ui->fontComboBox, SIGNAL(currentIndexChanged(int)), ui->horizontalSlider, SLOT(setValue(int)));
-    connect(ui->fileComboBox, SIGNAL(currentIndexChanged(int)), ui->horizontalSlider, SLOT(setValue(int)));
-    connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(setSlider(int)));
+    connect(ui->actionToggle_edit_view_mode, SIGNAL(triggered()), this, SLOT(toggleEditMode()));
+    ui->fontSlider->setValue(0);
+    ui->fontSlider->setMinimum(0);
+    connect(ui->fontComboBox, SIGNAL(currentIndexChanged(int)), ui->fontSlider, SLOT(setValue(int)));
+    connect(ui->fileComboBox, SIGNAL(currentIndexChanged(int)), ui->fontSlider, SLOT(setValue(int)));
+    connect(ui->fontSlider, SIGNAL(valueChanged(int)), this, SLOT(setSlider(int)));
     browseSystem();
+}
+
+void MainWindow::toggleEditMode()
+{
+    ui->scrollFonts->setVisible(!ui->scrollFonts->isVisible());
+    ui->textEdit->setVisible(!ui->textEdit->isVisible());
+
+    ui->fontComboBox->setEnabled(ui->textEdit->isVisible());
+    ui->fileComboBox->setEnabled(ui->textEdit->isVisible());
+    ui->fontSlider->setEnabled(ui->textEdit->isVisible());
+
+    if (ui->textEdit->isVisible()) // clean scroller
+        for (int i=0 ; i<ui->scrollFontsLayout->count()-1; i++) {
+            ui->scrollFontsLayout->removeItem(ui->scrollFontsLayout->takeAt(0));
+        }
+    else {    // populate scroller
+        QObjectList* objlist;
+        QLabel* label;
+        if (ui->fontComboBox->isVisible()){
+        // paraszt... why doesn't itemData give back Qfont Qvariants ?
+            int tmpidx = ui->fontComboBox->currentIndex();
+            for (int i=0 ; i<ui->fontComboBox->count(); i++) {
+                ui->fontComboBox->setCurrentIndex(i);
+                label = new QLabel();
+                label->setText(tr("The quick brown fox jumps over the lazy dog") + QString(" (%1)").arg(ui->fontComboBox->currentText()));
+                label->setFont(ui->fontComboBox->currentFont());
+                ui->scrollFontsLayout->insertWidget(0,label);
+            }
+            ui->fontComboBox->setCurrentIndex(tmpidx);
+            updateScrollFontSizes(ui->sizeSlider->value());
+        }
+
+    }
+
+}
+
+void MainWindow::updateScrollFontSizes(int val)
+{
+    for (int i=0 ; i<ui->scrollFontsLayout->count()-1; i++) {
+        QWidget* l = ui->scrollFontsLayout->itemAt(i)->widget();
+        QLabel* label = (QLabel*)ui->scrollFontsLayout->itemAt(i)->widget();
+        QFont tmpfont(label->font());
+        tmpfont.setPointSize(val);
+        label->setFont(tmpfont);
+    }
 }
 
 void MainWindow::setSlider(int val)
@@ -83,7 +139,7 @@ void MainWindow::browseSystem()
     ui->actionBrowse_directory->setChecked(false);
     ui->actionBrowse_system_fonts->setChecked(true);
     qfd.removeAllApplicationFonts();
-    ui->horizontalSlider->setMaximum(ui->fontComboBox->count()-1);
+    ui->fontSlider->setMaximum(ui->fontComboBox->count()-1);
     ui->fontComboBox->setCurrentIndex(0);
     setTextFont(ui->fontComboBox->currentFont());
 }
@@ -149,7 +205,7 @@ void MainWindow::browseDir()
             browseSystem();
             return;
         } else {
-            ui->horizontalSlider->setMaximum(ui->fileComboBox->count()-1);
+            ui->fontSlider->setMaximum(ui->fileComboBox->count()-1);
             ui->fileComboBox->setCurrentIndex(0);
             setFontFromFile(ui->fileComboBox->currentText());
         }

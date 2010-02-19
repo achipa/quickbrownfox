@@ -1,3 +1,10 @@
+quickbrownfox (1.1-maemo0) unstable; urgency=low
+
+  * Vertical size scroller
+  * Scroller mode (slow so not default)
+
+ -- Attila Csipa <maemo@csipa.in.rs>  Fri, 19 Feb 2010 18:15:44 +0100
+
 quickbrownfox (1.0-maemo1) unstable; urgency=low
 
   * Bugtracker field (duh)
