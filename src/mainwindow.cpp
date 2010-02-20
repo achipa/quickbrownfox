@@ -11,7 +11,8 @@ MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     qapp(&a),
-    settings("QuickBrownFox","default")
+    settings("QuickBrownFox","default"),
+    editmode(false)
 {
     ui->setupUi(this);
     foreach (QAction* action, ui->menuFremantle->actions()){
@@ -20,17 +21,18 @@ MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     }
     ui->scrollFonts->setProperty("FingerScrollable", true);
     ui->textEdit->setProperty("FingerScrollable", true);
-    ui->scrollFonts->setVisible(false);
     connect(ui->boldButton, SIGNAL(toggled(bool)), this, SLOT(boldify(bool)));
     connect(ui->italicButton, SIGNAL(toggled(bool)), this, SLOT(italicize(bool)));
     connect(ui->fontComboBox, SIGNAL(currentFontChanged(QFont)), this, SLOT(setTextFont(QFont)));
     connect(ui->sizeComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setTextSize(QString)));
+    ui->textEdit->setVisible(false);
+    ui->fileComboBox->setVisible(false);
+    ui->fontComboBox->setEnabled(false);
     ui->sizeSlider->setMinimum(0);
     ui->sizeSlider->setMaximum(ui->sizeComboBox->count());
     ui->sizeSlider->setValue(ui->sizeComboBox->currentIndex());
     connect(ui->sizeComboBox, SIGNAL(currentIndexChanged(int)), ui->sizeSlider, SLOT(setValue(int)));
     connect(ui->sizeSlider, SIGNAL(valueChanged(int)), ui->sizeComboBox, SLOT(setCurrentIndex(int)));
-    connect(ui->sizeSlider, SIGNAL(valueChanged(int)), this, SLOT(updateScrollFontSizes(int)));
     connect(ui->fileComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setFontFromFile(QString)));
     connect(ui->actionAbout_Qt, SIGNAL(triggered()), qapp, SLOT(aboutQt()));
     connect(ui->actionAbout_Quick_Brown_Fox, SIGNAL(triggered()), this, SLOT(about()));
@@ -45,25 +47,46 @@ MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     connect(ui->fileComboBox, SIGNAL(currentIndexChanged(int)), ui->fontSlider, SLOT(setValue(int)));
     connect(ui->fontSlider, SIGNAL(valueChanged(int)), this, SLOT(setSlider(int)));
     browseSystem();
+    populateScroller(true);
 }
 
 void MainWindow::toggleEditMode()
 {
-    ui->scrollFonts->setVisible(!ui->scrollFonts->isVisible());
-    ui->textEdit->setVisible(!ui->textEdit->isVisible());
+    editmode = !editmode;
+    ui->scrollFonts->setVisible(!editmode);
+    ui->textEdit->setVisible(editmode);
 
-    ui->fontComboBox->setEnabled(ui->textEdit->isVisible());
-    ui->fileComboBox->setEnabled(ui->textEdit->isVisible());
-    ui->fontSlider->setEnabled(ui->textEdit->isVisible());
+    ui->fontComboBox->setEnabled(editmode);
+    ui->fileComboBox->setEnabled(editmode);
+    ui->fontSlider->setVisible(editmode);
+    populateScroller(!editmode);
+}
 
-    if (ui->textEdit->isVisible()) // clean scroller
-        for (int i=0 ; i<ui->scrollFontsLayout->count()-1; i++) {
-            ui->scrollFontsLayout->removeItem(ui->scrollFontsLayout->takeAt(0));
-        }
-    else {    // populate scroller
-        QObjectList* objlist;
+void MainWindow::populateScroller(bool vis)
+{
+    foreach (QLabel * label, labellist)
+    {
+        ui->scrollFontsLayout->removeWidget(label);
+        label->deleteLater();
+        labellist.removeAll(label);
+    }
+    while (ui->scrollFontsLayout->count())
+        delete ui->scrollFontsLayout->takeAt(0);
+    if (vis) {    // populate scroller
         QLabel* label;
-        if (ui->fontComboBox->isVisible()){
+        QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+        if (ui->fileComboBox->isVisible()){
+            int tmpidx = ui->fileComboBox->currentIndex();
+            for (int i=0 ; i<ui->fileComboBox->count(); i++) {
+                ui->fileComboBox->setCurrentIndex(i);
+                label = new QLabel();
+                label->setText(tr("The quick brown fox jumps over the lazy dog") + QString(" (%1)").arg(ui->fileComboBox->currentText()));
+                label->setFont(qfd.font(ui->fileComboBox->currentText(), "",10));
+                ui->scrollFontsLayout->addWidget(label);
+                labellist.append(label);
+            }
+            ui->fileComboBox->setCurrentIndex(tmpidx);
+        } else {
         // paraszt... why doesn't itemData give back Qfont Qvariants ?
             int tmpidx = ui->fontComboBox->currentIndex();
             for (int i=0 ; i<ui->fontComboBox->count(); i++) {
@@ -71,23 +94,28 @@ void MainWindow::toggleEditMode()
                 label = new QLabel();
                 label->setText(tr("The quick brown fox jumps over the lazy dog") + QString(" (%1)").arg(ui->fontComboBox->currentText()));
                 label->setFont(ui->fontComboBox->currentFont());
-                ui->scrollFontsLayout->insertWidget(0,label);
+                ui->scrollFontsLayout->addWidget(label);
+                labellist.append(label);
             }
             ui->fontComboBox->setCurrentIndex(tmpidx);
-            updateScrollFontSizes(ui->sizeSlider->value());
         }
+        ui->scrollFontsLayout->addItem(verticalSpacer);
 
+    } else {
+        boldify(ui->boldButton->isChecked());
+        italicize(ui->italicButton->isChecked());
     }
-
+    setTextSize(ui->sizeComboBox->currentText());
 }
 
-void MainWindow::updateScrollFontSizes(int val)
+void MainWindow::updateScrollFontSizes(qreal val)
 {
     for (int i=0 ; i<ui->scrollFontsLayout->count()-1; i++) {
-        QWidget* l = ui->scrollFontsLayout->itemAt(i)->widget();
         QLabel* label = (QLabel*)ui->scrollFontsLayout->itemAt(i)->widget();
         QFont tmpfont(label->font());
         tmpfont.setPointSize(val);
+        tmpfont.setBold(ui->boldButton->isChecked());
+        tmpfont.setItalic(ui->italicButton->isChecked());
         label->setFont(tmpfont);
     }
 }
@@ -113,7 +141,7 @@ void MainWindow::setText()
     if (dialog.exec()) {
         fileNames = dialog.selectedFiles();
         if (fileNames.count() > 0){
-            qDebug() << fileNames[0];
+//            qDebug() << fileNames[0];
             QFile f(fileNames[0]);
             if (f.open(QIODevice::ReadOnly|QIODevice::Text)){
                 QString s(f.readAll());
@@ -215,15 +243,18 @@ void MainWindow::browseDir()
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, "The Quick Brown Fox", "A font viewer tool, Copyright (C) 2010 by Attila Csipa");
+    QMessageBox::about(this, "The Quick Brown Fox", tr("A font viewer tool, Copyright (C) 2010 by Attila Csipa"));
 }
 
 void MainWindow::setTextSize(QString sizestr)
 {
-    QTextCursor tc = ui->textEdit->textCursor();
-    ui->textEdit->selectAll();
-    ui->textEdit->setFontPointSize(sizestr.toFloat());
-    ui->textEdit->setTextCursor(tc);
+    if (editmode) {
+        QTextCursor tc = ui->textEdit->textCursor();
+        ui->textEdit->selectAll();
+        ui->textEdit->setFontPointSize(sizestr.toFloat());
+        ui->textEdit->setTextCursor(tc);
+    } else
+        updateScrollFontSizes(ui->sizeComboBox->currentText().toFloat());
 }
 
 void MainWindow::setTextFont(QFont font)
@@ -239,18 +270,24 @@ void MainWindow::setTextFont(QFont font)
 
 void MainWindow::italicize(bool italic)
 {
-    QTextCursor tc = ui->textEdit->textCursor();
-    ui->textEdit->selectAll();
-    ui->textEdit->setFontItalic(italic);
-    ui->textEdit->setTextCursor(tc);
+    if (editmode){
+        QTextCursor tc = ui->textEdit->textCursor();
+        ui->textEdit->selectAll();
+        ui->textEdit->setFontItalic(italic);
+        ui->textEdit->setTextCursor(tc);
+    } else
+        updateScrollFontSizes(ui->sizeComboBox->currentText().toFloat());
 }
 
 void MainWindow::boldify(bool bold)
 {
-    QTextCursor tc = ui->textEdit->textCursor();
-    ui->textEdit->selectAll();
-    ui->textEdit->setFontWeight(bold ? QFont::Bold : QFont::Normal);
-    ui->textEdit->setTextCursor(tc);
+    if (editmode){
+        QTextCursor tc = ui->textEdit->textCursor();
+        ui->textEdit->selectAll();
+        ui->textEdit->setFontWeight(bold ? QFont::Bold : QFont::Normal);
+        ui->textEdit->setTextCursor(tc);
+    } else
+        updateScrollFontSizes(ui->sizeComboBox->currentText().toFloat());
 }
 
 MainWindow::~MainWindow()
