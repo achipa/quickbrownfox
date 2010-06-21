@@ -27,6 +27,7 @@ MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     connect(ui->sizeComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setTextSize(QString)));
     ui->textEdit->setVisible(false);
     ui->fileComboBox->setVisible(false);
+    ui->fontSlider->setVisible(false);
     ui->fontComboBox->setEnabled(false);
     ui->sizeSlider->setMinimum(0);
     ui->sizeSlider->setMaximum(ui->sizeComboBox->count());
@@ -41,6 +42,7 @@ MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     connect(ui->actionSet_Default_Text, SIGNAL(triggered(bool)), this, SLOT(setDefaultText()));
     connect(ui->actionLoad_Text, SIGNAL(triggered(bool)), this, SLOT(setText()));
     connect(ui->actionToggle_edit_view_mode, SIGNAL(triggered()), this, SLOT(toggleEditMode()));
+    connect(ui->actionAutoRotate, SIGNAL(triggered(bool)), this, SLOT(toggleAutoRotate()));
     ui->fontSlider->setValue(0);
     ui->fontSlider->setMinimum(0);
     connect(ui->fontComboBox, SIGNAL(currentIndexChanged(int)), ui->fontSlider, SLOT(setValue(int)));
@@ -48,6 +50,26 @@ MainWindow::MainWindow(QApplication& a, QWidget *parent) :
     connect(ui->fontSlider, SIGNAL(valueChanged(int)), this, SLOT(setSlider(int)));
     browseSystem();
     populateScroller(true);
+    for (int i = 0; i < ui->sizeComboBox->count(); i++)
+        ui->sizeComboBox->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
+#ifdef Q_WS_MAEMO5
+    ui->actionAutoRotate->setChecked(settings.value("autorotate", true).toBool());
+    setAttribute(Qt::WA_Maemo5AutoOrientation, settings.value("autorotate", true).toBool());
+#else
+    ui->actionAutoRotate->setVisible(false);
+#endif
+}
+
+void MainWindow::toggleAutoRotate()
+{
+    bool autorot = settings.value("autorotate",true).toBool();
+    settings.setValue("autorotate", !autorot);
+#ifdef Q_WS_MAEMO_5
+    setAttribute(Qt::WA_Maemo5AutoOrientation, !autorot);
+    if (autorot)
+        setAttribute(Qt::WA_Maemo5LandscapeOrientation, true);
+#endif
+    settings.sync();
 }
 
 void MainWindow::toggleEditMode()
@@ -200,43 +222,37 @@ void MainWindow::browseDir()
     ui->fontComboBox->setVisible(false);
     ui->actionBrowse_system_fonts->setChecked(false);
     ui->actionBrowse_directory->setChecked(true);
-    QFileDialog dialog(this);
-    dialog.setFileMode(QFileDialog::Directory);
-    QStringList fileNames;
-    if (dialog.exec())
-        fileNames = dialog.selectedFiles();
-    if (fileNames.length() == 0) {
+    QDir dir(QFileDialog::getExistingDirectory(this, tr("Font Directory")));
+    if (!dir.exists()){
+        notify(tr("No font files found"));
+        browseSystem();
+        return;
+    }
+    QString fullpath;
+    qfd.removeAllApplicationFonts();
+    QStringList filterlist;
+    filterlist << "*.ttf" << "*.otf" << "*.pfb" << "*.afb" << "*.pfm" << "*.afm";
+    dir.setNameFilters(filterlist);
+    ui->fileComboBox->clear();
+    QStringList dupelist;
+    foreach (QString fname, dir.entryList())
+    {
+        fullpath = dir.canonicalPath() +"/" + fname;
+        int fid = qfd.addApplicationFont(fullpath);
+        foreach (QString famname, qfd.applicationFontFamilies(fid))
+            if (!dupelist.contains(famname)) {
+                ui->fileComboBox->addItem(famname, fname);
+                dupelist << famname;
+            }
+    }
+    if (ui->fileComboBox->count() == 0) {
         notify(tr("No font files found"));
         browseSystem();
         return;
     } else {
-        QDir dir(fileNames[0]);
-        QString fullpath;
-        qfd.removeAllApplicationFonts();
-        QStringList filterlist;
-        filterlist << "*.ttf" << "*.otf" << "*.pfb" << "*.afb" << "*.pfm" << "*.afm";
-        dir.setNameFilters(filterlist);
-        ui->fileComboBox->clear();
-        QStringList dupelist;
-        foreach (QString fname, dir.entryList())
-        {
-            fullpath = dir.canonicalPath() +"/" + fname;
-            int fid = qfd.addApplicationFont(fullpath);
-            foreach (QString famname, qfd.applicationFontFamilies(fid))
-                if (!dupelist.contains(famname)) {
-                    ui->fileComboBox->addItem(famname, fname);
-                    dupelist << famname;
-                }
-        }
-        if (ui->fileComboBox->count() == 0) {
-            notify(tr("No font files found"));
-            browseSystem();
-            return;
-        } else {
-            ui->fontSlider->setMaximum(ui->fileComboBox->count()-1);
-            ui->fileComboBox->setCurrentIndex(0);
-            setFontFromFile(ui->fileComboBox->currentText());
-        }
+        ui->fontSlider->setMaximum(ui->fileComboBox->count()-1);
+        ui->fileComboBox->setCurrentIndex(0);
+        setFontFromFile(ui->fileComboBox->currentText());
     }
 }
 

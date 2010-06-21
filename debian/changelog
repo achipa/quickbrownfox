@@ -1,4 +1,12 @@
-quickbrownfox (1.2-maemo0) unstable; urgency=low
+quickbrownfox (1.3-maemo0) unstable; urgency=low
+
+  * PR1.2 compatibility
+  * Native file chooser
+  * AutoRotate
+
+ -- Attila Csipa <maemo@csipa.in.rs>  Fri, 28 May 2010 23:15:44 +0100
+
+quickbrownfox (1.2-maemo1) unstable; urgency=low
 
   * Scroller mode default
   * scroller fingerscrollable

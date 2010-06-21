@@ -4,18 +4,24 @@
 #
 #-------------------------------------------------
 
+
 TARGET = quickbrownfox
 TEMPLATE = app
 #CONFIG += release
 
 CONFIG += qdbus
-
+#QT += dbus maemo5 xml
 SOURCES += main.cpp\
         mainwindow.cpp
 
 HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
+
+maemo5 {
+    message("Maemo5 build")
+#    QT+= maemo5
+}
 
 unix {
     # VARIABLES

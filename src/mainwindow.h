@@ -30,6 +30,7 @@ private:
     QList<QLabel*> labellist;
 private slots:
     void toggleEditMode();
+    void toggleAutoRotate();
     void updateScrollFontSizes(qreal val);
     void boldify(bool bold);
     void italicize(bool italic);
